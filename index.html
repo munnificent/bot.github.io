@@ -1,48 +1,110 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Мой магазин</title>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <title>Онлайн магазин</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script> <!--Подключаем скрипт от телеграм-->
 </head>
 <body>
-  <h1>Мой магазин</h1>
+  <h1>Онлайн магазин</h1>
 
-  <div class="product">
-    <span>Товар 1</span>
-    <span>Цена: $10</span>
-    <input type="number" id="quantityA" min="1" max="10" value="1">
-    <button onclick="addToCart('Товар 1', 'quantityA')">Добавить в корзину</button>
-  </div>
+  <form id="order-form">
+    <h2>Товары</h2>
+    <div>
+      <label for="item1">Товар 1</label>
+      <input type="number" id="item1" name="item1" min="0" value="0">
+    </div>
 
-  <div class="product">
-    <span>Товар 2</span>
-    <span>Цена: $20</span>
-    <input type="number" id="quantityB" min="1" max="10" value="1">
-    <button onclick="addToCart('Товар 2', 'quantityB')">Добавить в корзину</button>
-  </div>
+    <div>
+      <label for="item2">Товар 2</label>
+      <input type="number" id="item2" name="item2" min="0" value="0">
+    </div>
 
-  <div class="product">
-    <span>Товар 3</span>
-    <span>Цена: $30</span>
-    <input type="number" id="quantityC" min="1" max="10" value="1">
-    <button id="btn" class="button">Добавить в корзину</button>
-  </div>
+    <div>
+      <label for="item3">Товар 3</label>
+      <input type="number" id="item3" name="item3" min="0" value="0">
+    </div>
+
+    <div>
+      <label for="item4">Товар 4</label>
+      <input type="number" id="item4" name="item4" min="0" value="0">
+    </div>
+
+    <div>
+      <label for="item5">Товар 5</label>
+      <input type="number" id="item5" name="item5" min="0" value="0">
+    </div>
+
+    <button type="submit">Отправить заказ</button>
+  </form>
+
+  <h2>Общая сумма заказа: <span id="total-price">0</span> уен</h2>
 
   <script>
+    let tg = window.Telegram.WebApp; //получаем объект webapp телеграма 
 
-    let btnED = document.getElementById("btnED"); //получаем кнопку активировать/деактивировать
-      btnED.addEventListener('click', function(productName, quantityId){ //вешаем событие на нажатие html-кнопки
-        var quantity = document.getElementById(quantityId).value;
-        var message = "Товар: " + productName + "\nКоличество: " + quantity;
-        tg.sendData(message);
+    tg.expand(); //расширяем на все окно  
+
+    tg.MainButton.text = "Changed Text"; //изменяем текст кнопки 
+    tg.MainButton.textColor = "#F55353"; //изменяем цвет текста кнопки
+    tg.MainButton.color = "#143F6B"; //изменяем цвет бэкграунда кнопки
+    tg.MainButton.setParams({"color": "#143F6B"}); //так изменяются все параметры
+
+
+      $(document).ready(function() {
+        // Обработчик отправки формы
+        $("#order-form").submit(function(event) {
+          event.preventDefault(); // Предотвращаем обновление страницы
+
+          // Собираем данные о каждом товаре
+          var orderData = {
+            item1: parseInt($("#item1").val()),
+            item2: parseInt($("#item2").val()),
+            item3: parseInt($("#item3").val()),
+            item4: parseInt($("#item4").val()),
+            item5: parseInt($("#item5").val())
+          };
+
+          // Выполняем отправку данных на сервер (здесь можно добавить обработку AJAX-запроса)
+          console.log(orderData);
+
+          // Вычисляем общую сумму заказа
+          var totalPrice = 0;
+          for (var item in orderData) {
+            totalPrice += orderData[item];
+          }
+
+          // Обновляем значение общей суммы на странице
+          $("#total-price").text(totalPrice);
+        });
       });
 
-    function addToCart(productName, quantityId) {
-      var quantity = document.getElementById(quantityId).value;
-      var message = "Товар: " + productName + "\nКоличество: " + quantity;
-      tg.sendData(message);
-    }
+      Telegram.WebApp.onEvent('mainButtonClicked', function(){
+        // Обработчик отправки формы
+        $("#order-form").submit(function(event) {
+          event.preventDefault(); // Предотвращаем обновление страницы
 
+          // Собираем данные о каждом товаре
+          var orderData = {
+            item1: parseInt($("#item1").val()),
+            item2: parseInt($("#item2").val()),
+            item3: parseInt($("#item3").val()),
+            item4: parseInt($("#item4").val()),
+            item5: parseInt($("#item5").val())
+          };
+
+          // Выполняем отправку данных на сервер (здесь можно добавить обработку AJAX-запроса)
+          console.log(orderData);
+
+          // Вычисляем общую сумму заказа
+          var totalPrice = 0;
+          for (var item in orderData) {
+            totalPrice += orderData[item];
+          }
+        tg.sendData(totalPrice); 
+        });
+      });
+            
   </script>
 </body>
 </html>
