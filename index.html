@@ -3,37 +3,49 @@
 <head>
   <title>Онлайн магазин</title>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script> <!-- Подключаем скрипт от Telegram -->
-  <script>
-    var WebApp = window.Telegram.WebApp;
-
-    WebApp.showAlert(`Добро пожаловать, @${WebApp.WebAppUser.username}.`);
-    var MainButton = WebApp.MainButton;
-    MainButton.show();
-    
-    Telegram.WebApp.onEvent('mainButtonClicked', function(){
-      var orderData = {
-        item1: parseInt($("#item1").val()),
-        item2: parseInt($("#item2").val())
-      };
-
-      var totalPrice = Object.values(orderData).reduce((total, item) => total + item, 0);
-
-      var dataToSend = {
-        total: totalPrice,
-        order: orderData
-      };
-
-      tg.sendData(JSON.stringify(dataToSend));
-    });
-  </script>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script>
     const tg = window.Telegram.WebApp;
     tg.expand();
-    tg.MainButton.setText("Changed Text1");
-    tg.MainButton.setParams({
-      color: "#143F6B",
-      textColor: "#F55353"
+
+    var MainButton = WebApp.MainButton;
+    var BackButton = WebApp.BackButton;
+
+    MainButton.show();
+    MainButton.onClick(sendOrder);
+
+    function calculateTotal(orderData) {
+      let total = 0;
+      for (let item in orderData) {
+        total += orderData[item].quantity * orderData[item].price;
+      }
+      return total;
+    }
+
+    function sendOrder() {
+      var orderData = {
+        item1: {
+          quantity: parseInt($("#item1").val()),
+          price: 1000 // Замените на свою цену для товара 1
+        },
+        item2: {
+          quantity: parseInt($("#item2").val()),
+          price: 2000 // Замените на свою цену для товара 2
+        }
+      };
+
+      let total = calculateTotal(orderData);
+      if (confirm('Стоимость вашего заказа составляет ' + total + '. Вы уверены, что хотите продолжить?')) {
+        orderData.total = total;
+        tg.sendData(JSON.stringify(orderData));
+      }
+    }
+
+    $(document).ready(function() {
+      $('#order-form').submit(function(e) {
+        e.preventDefault();
+        sendOrder();
+      });
     });
   </script>
 </head>
@@ -56,7 +68,5 @@
 
     <button type="submit">Отправить заказ</button>
   </form>
-
-  <h2>Общая сумма заказа: <span id="total-price">0</span> уен</h2>
 </body>
 </html>
