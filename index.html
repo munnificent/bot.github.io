@@ -25,15 +25,29 @@
     <span>Товар 3</span>
     <span>Цена: $30</span>
     <input type="number" id="quantityC" min="1" max="10" value="1">
-    <button onclick="addToCart('Товар 3', 'quantityC')">Добавить в корзину</button>
+    <button id="btn" class="button">Добавить в корзину</button>
   </div>
 
   <script>
+
+  let btnED = document.getElementById("btnED"); //получаем кнопку активировать/деактивировать
+    btnED.addEventListener('click', function(){ //вешаем событие на нажатие html-кнопки
+        if (tg.MainButton.isActive){ //если кнопка показана 
+          tg.MainButton.setParams({"color": "#E0FFFF"}); //меняем цвет
+          tg.MainButton.disable() //скрываем кнопку 
+        }
+        else{ //иначе
+          tg.MainButton.setParams({"color": "#143F6B"}); //меняем цвет
+          tg.MainButton.enable() //показываем 
+        }
+    });
+
     function addToCart(productName, quantityId) {
       var quantity = document.getElementById(quantityId).value;
       var message = "Товар: " + productName + "\nКоличество: " + quantity;
       tg.sendData(message);
     }
+
   </script>
 </body>
 </html>
