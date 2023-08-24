@@ -5,31 +5,34 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
-  <h1>Асартимент</h1>
+  <h1>Мой магазин</h1>
 
   <div class="product">
     <span>Товар 1</span>
     <span>Цена: $10</span>
-    <button onclick="sendToTelegram('Товар 1')">Добавить в корзину</button>
+    <input type="number" id="quantityA" min="1" max="10" value="1">
+    <button onclick="addToCart('Товар 1', 'quantityA')">Добавить в корзину</button>
   </div>
 
   <div class="product">
     <span>Товар 2</span>
     <span>Цена: $20</span>
-    <button onclick="sendToTelegram('Товар 2')">Добавить в корзину</button>
+    <input type="number" id="quantityB" min="1" max="10" value="1">
+    <button onclick="addToCart('Товар 2', 'quantityB')">Добавить в корзину</button>
   </div>
 
   <div class="product">
     <span>Товар 3</span>
     <span>Цена: $30</span>
-    <button onclick="sendToTelegram('Товар 3')">Добавить в корзину</button>
+    <input type="number" id="quantityC" min="1" max="10" value="1">
+    <button onclick="addToCart('Товар 3', 'quantityC')">Добавить в корзину</button>
   </div>
 
   <script>
-    function sendToTelegram(productName) {
-      Telegram.WebApp.onEvent('mainButtonClicked', function(){
-        tg.sendData(productName);
-      });
+    function addToCart(productName, quantityId) {
+      var quantity = document.getElementById(quantityId).value;
+      var message = "Товар: " + productName + "\nКоличество: " + quantity;
+      tg.sendData(message);
     }
   </script>
 </body>
