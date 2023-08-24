@@ -3,7 +3,41 @@
 <head>
   <title>Онлайн магазин</title>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script> <!--Подключаем скрипт от телеграм-->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script> <!-- Подключаем скрипт от Telegram -->
+  <script>
+       let tg = window.Telegram.WebApp; //получаем объект webapp телеграма 
+
+      tg.expand(); //расширяем на все окно  
+
+      tg.MainButton.text = "Changed Text"; //изменяем текст кнопки 
+      tg.MainButton.setText("Changed Text1"); //изменяем текст кнопки иначе
+      tg.MainButton.textColor = "#F55353"; //изменяем цвет текста кнопки
+      tg.MainButton.color = "#143F6B"; //изменяем цвет бэкграунда кнопки
+      tg.MainButton.setParams({"color": "#143F6B"}); //так изменяются все параметры
+      
+    Telegram.WebApp.onEvent('mainButtonClicked', function(){
+      // Собираем данные о каждом товаре
+      var orderData = {
+        item1: parseInt($("#item1").val()),
+        item5: parseInt($("#item2").val())
+      };
+
+      // Вычисляем общую сумму заказа
+      var totalPrice = 0;
+      for (var item in orderData) {
+        totalPrice += orderData[item];
+      }
+
+      // Создаем объект с полной стоимостью и заказом
+      var dataToSend = {
+        total: totalPrice,
+        order: orderData
+      };
+
+      // Отправляем данные в строковом виде
+      tg.sendData(JSON.stringify(dataToSend));
+    });
+  </script>
 </head>
 <body>
   <h1>Онлайн магазин</h1>
@@ -20,91 +54,11 @@
       <input type="number" id="item2" name="item2" min="0" value="0">
     </div>
 
-    <div>
-      <label for="item3">Товар 3</label>
-      <input type="number" id="item3" name="item3" min="0" value="0">
-    </div>
-
-    <div>
-      <label for="item4">Товар 4</label>
-      <input type="number" id="item4" name="item4" min="0" value="0">
-    </div>
-
-    <div>
-      <label for="item5">Товар 5</label>
-      <input type="number" id="item5" name="item5" min="0" value="0">
-    </div>
+    <!-- Добавьте больше товаров здесь, если необходимо -->
 
     <button type="submit">Отправить заказ</button>
   </form>
 
   <h2>Общая сумма заказа: <span id="total-price">0</span> уен</h2>
-
-  <script>
-    let tg = window.Telegram.WebApp; //получаем объект webapp телеграма 
-
-    tg.expand(); //расширяем на все окно  
-
-    tg.MainButton.text = "Changed Text"; //изменяем текст кнопки 
-    tg.MainButton.textColor = "#F55353"; //изменяем цвет текста кнопки
-    tg.MainButton.color = "#143F6B"; //изменяем цвет бэкграунда кнопки
-    tg.MainButton.setParams({"color": "#143F6B"}); //так изменяются все параметры
-
-
-      $(document).ready(function() {
-        // Обработчик отправки формы
-        $("#order-form").submit(function(event) {
-          event.preventDefault(); // Предотвращаем обновление страницы
-
-          // Собираем данные о каждом товаре
-          var orderData = {
-            item1: parseInt($("#item1").val()),
-            item2: parseInt($("#item2").val()),
-            item3: parseInt($("#item3").val()),
-            item4: parseInt($("#item4").val()),
-            item5: parseInt($("#item5").val())
-          };
-
-          // Выполняем отправку данных на сервер (здесь можно добавить обработку AJAX-запроса)
-          console.log(orderData);
-
-          // Вычисляем общую сумму заказа
-          var totalPrice = 0;
-          for (var item in orderData) {
-            totalPrice += orderData[item];
-          }
-
-          // Обновляем значение общей суммы на странице
-          $("#total-price").text(totalPrice);
-        });
-      });
-
-      Telegram.WebApp.onEvent('mainButtonClicked', function(){
-        // Обработчик отправки формы
-        $("#order-form").submit(function(event) {
-          event.preventDefault(); // Предотвращаем обновление страницы
-
-          // Собираем данные о каждом товаре
-          var orderData = {
-            item1: parseInt($("#item1").val()),
-            item2: parseInt($("#item2").val()),
-            item3: parseInt($("#item3").val()),
-            item4: parseInt($("#item4").val()),
-            item5: parseInt($("#item5").val())
-          };
-
-          // Выполняем отправку данных на сервер (здесь можно добавить обработку AJAX-запроса)
-          console.log(orderData);
-
-          // Вычисляем общую сумму заказа
-          var totalPrice = 0;
-          for (var item in orderData) {
-            totalPrice += orderData[item];
-          }
-        tg.sendData(totalPrice); 
-        });
-      });
-            
-  </script>
 </body>
 </html>
