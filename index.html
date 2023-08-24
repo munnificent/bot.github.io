@@ -30,17 +30,12 @@
 
   <script>
 
-  let btnED = document.getElementById("btnED"); //получаем кнопку активировать/деактивировать
-    btnED.addEventListener('click', function(){ //вешаем событие на нажатие html-кнопки
-        if (tg.MainButton.isActive){ //если кнопка показана 
-          tg.MainButton.setParams({"color": "#E0FFFF"}); //меняем цвет
-          tg.MainButton.disable() //скрываем кнопку 
-        }
-        else{ //иначе
-          tg.MainButton.setParams({"color": "#143F6B"}); //меняем цвет
-          tg.MainButton.enable() //показываем 
-        }
-    });
+    let btnED = document.getElementById("btnED"); //получаем кнопку активировать/деактивировать
+      btnED.addEventListener('click', function(productName, quantityId){ //вешаем событие на нажатие html-кнопки
+        var quantity = document.getElementById(quantityId).value;
+        var message = "Товар: " + productName + "\nКоличество: " + quantity;
+        tg.sendData(message);
+      });
 
     function addToCart(productName, quantityId) {
       var quantity = document.getElementById(quantityId).value;
