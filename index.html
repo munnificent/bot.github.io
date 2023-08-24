@@ -5,37 +5,35 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://telegram.org/js/telegram-web-app.js"></script> <!-- Подключаем скрипт от Telegram -->
   <script>
-       let tg = window.Telegram.WebApp; //получаем объект webapp телеграма 
+    var WebApp = window.Telegram.WebApp;
 
-      tg.expand(); //расширяем на все окно  
-
-      tg.MainButton.text = "Changed Text"; //изменяем текст кнопки 
-      tg.MainButton.setText("Changed Text1"); //изменяем текст кнопки иначе
-      tg.MainButton.textColor = "#F55353"; //изменяем цвет текста кнопки
-      tg.MainButton.color = "#143F6B"; //изменяем цвет бэкграунда кнопки
-      tg.MainButton.setParams({"color": "#143F6B"}); //так изменяются все параметры
-      
+    WebApp.showAlert(`Добро пожаловать, @${WebApp.WebAppUser.username}.`);
+    var MainButton = WebApp.MainButton;
+    MainButton.show();
+    
     Telegram.WebApp.onEvent('mainButtonClicked', function(){
-      // Собираем данные о каждом товаре
       var orderData = {
         item1: parseInt($("#item1").val()),
-        item5: parseInt($("#item2").val())
+        item2: parseInt($("#item2").val())
       };
 
-      // Вычисляем общую сумму заказа
-      var totalPrice = 0;
-      for (var item in orderData) {
-        totalPrice += orderData[item];
-      }
+      var totalPrice = Object.values(orderData).reduce((total, item) => total + item, 0);
 
-      // Создаем объект с полной стоимостью и заказом
       var dataToSend = {
         total: totalPrice,
         order: orderData
       };
 
-      // Отправляем данные в строковом виде
       tg.sendData(JSON.stringify(dataToSend));
+    });
+  </script>
+  <script>
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+    tg.MainButton.setText("Changed Text1");
+    tg.MainButton.setParams({
+      color: "#143F6B",
+      textColor: "#F55353"
     });
   </script>
 </head>
